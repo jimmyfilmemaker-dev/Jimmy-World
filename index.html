@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Mundo de Jimmy — Pacote de Prompts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0a0c12;
+    --bg-panel:#11151f;
+    --bg-panel-2:#161c29;
+    --line:rgba(140,170,220,0.14);
+    --cyan:#4fe3e0;
+    --lime:#a4e83c;
+    --orange:#ff7a1a;
+    --orange-2:#ff9a3d;
+    --ink:#f2f5f9;
+    --ink-dim:#93a0b8;
+    --ink-dimmer:#5c6880;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-void);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+  }
+
+  /* ambient grid backdrop */
+  .grid-glow{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(255,122,26,0.18), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -10% 40%, rgba(79,227,224,0.10), transparent 60%),
+      linear-gradient(var(--bg-void), var(--bg-void));
+  }
+  .grid-glow::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 20%, black, transparent 75%);
+    opacity:0.5;
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px; position:relative; z-index:1;}
+
+  /* NAV */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 32px; max-width:1180px; margin:0 auto; position:relative; z-index:2;
+  }
+  .brand{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:17px;
+    letter-spacing:0.02em;
+    display:flex; align-items:center; gap:9px;
+  }
+  .brand .dot{width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 12px var(--lime);}
+  .brand small{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-dimmer); font-weight:400; letter-spacing:0.08em; margin-top:2px;}
+  .nav-tag{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-dim);
+    border:1px solid var(--line); padding:6px 12px; border-radius:100px;
+    display:flex; align-items:center; gap:7px;
+  }
+  .nav-tag .pip{width:6px;height:6px;border-radius:50%;background:var(--cyan); animation:blink 1.6s infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+  /* HERO */
+  .hero{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px;
+    align-items:center;
+    padding:36px 0 80px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--lime);
+    letter-spacing:0.12em; text-transform:uppercase;
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before{content:"›"; color:var(--lime);}
+  h1.title{
+    font-family:'Archivo Black', sans-serif;
+    font-size:clamp(40px, 5.2vw, 68px);
+    line-height:0.98;
+    text-transform:uppercase;
+    letter-spacing:-0.01em;
+  }
+  h1.title .line2{
+    display:block;
+    background:linear-gradient(97deg, var(--lime) 0%, var(--cyan) 55%, var(--lime) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 26px rgba(164,232,60,0.28));
+  }
+  .hero-sub{
+    margin-top:22px; font-size:18px; color:var(--ink-dim); max-width:480px; line-height:1.6;
+  }
+  .hero-sub strong{color:var(--ink); font-weight:600;}
+  .hero-cta-row{margin-top:34px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+
+  .btn-primary{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15.5px;
+    color:#0a0c12; background:linear-gradient(97deg, var(--lime), #cdf37e);
+    border:none; padding:16px 30px; border-radius:10px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px;
+    text-decoration:none;
+    box-shadow:0 0 0 1px rgba(164,232,60,0.4), 0 14px 34px -10px rgba(164,232,60,0.55);
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 0 0 1px rgba(164,232,60,0.6), 0 18px 40px -8px rgba(164,232,60,0.7);}
+  .btn-primary svg{width:16px; height:16px;}
+
+  .price-tag{
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-dim);
+  }
+  .price-tag .was{text-decoration:line-through; opacity:0.55; margin-right:8px;}
+  .price-tag .now{color:var(--lime); font-weight:600; font-size:15px;}
+
+  /* box art */
+  .box-stage{
+    position:relative; display:flex; justify-content:center; align-items:center;
+    perspective:1200px;
+  }
+  .box-stage::before{
+    content:""; position:absolute; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,122,26,0.5), transparent 70%);
+    filter:blur(10px); z-index:0;
+  }
+  .box-art{
+    position:relative; z-index:1; width:340px; max-width:82vw;
+    border-radius:18px;
+    box-shadow:
+      0 30px 60px -18px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 0 70px -10px rgba(255,122,26,0.35);
+    transform:rotateY(-9deg) rotateX(2deg);
+    animation:float 6s ease-in-out infinite;
+    transition:transform 0.4s ease;
+  }
+  .box-art:hover{transform:rotateY(-2deg) rotateX(0deg) scale(1.02);}
+  .box-art img{width:100%; display:block; border-radius:18px;}
+  @keyframes float{0%,100%{transform:rotateY(-9deg) rotateX(2deg) translateY(0);} 50%{transform:rotateY(-9deg) rotateX(2deg) translateY(-14px);}}
+
+  /* SECTION shared */
+  section{position:relative; z-index:1; padding:64px 0;}
+  .section-head{max-width:640px; margin-bottom:44px;}
+  .kicker{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan);
+    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:14px; display:block;
+  }
+  h2{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(26px, 3.2vw, 38px); line-height:1.15; letter-spacing:-0.01em;
+  }
+  .section-sub{color:var(--ink-dim); font-size:16px; margin-top:14px; line-height:1.6;}
+
+  /* terminal cards */
+  .terms{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .term-card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px; border-bottom:1px solid var(--line);
+    background:var(--bg-panel-2);
+  }
+  .term-bar span{width:9px; height:9px; border-radius:50%; background:var(--ink-dimmer);}
+  .term-bar span:nth-child(1){background:#ff5f57;}
+  .term-bar span:nth-child(2){background:#febc2e;}
+  .term-bar span:nth-child(3){background:#28c840;}
+  .term-bar .term-label{
+    margin-left:8px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-dimmer);
+  }
+  .term-body{padding:26px 24px 28px;}
+  .term-body .icon{font-size:24px; margin-bottom:14px; display:block;}
+  .term-body h3{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; margin-bottom:10px;
+  }
+  .term-body p{color:var(--ink-dim); font-size:15px; line-height:1.65;}
+
+  /* pipeline */
+  .pipeline{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    gap:16px; margin-top:12px;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:16px;
+    padding:30px 26px;
+  }
+  .pipe-node{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink); text-align:center;
+    flex:1; min-width:130px;
+  }
+  .pipe-node .dot{
+    width:44px; height:44px; border-radius:12px;
+    background:var(--bg-panel-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    box-shadow:0 0 0 1px rgba(79,227,224,0.0);
+  }
+  .pipe-arrow{color:var(--cyan); font-size:20px; opacity:0.7; flex-shrink:0;}
+  @media (max-width:760px){ .pipe-arrow{transform:rotate(90deg);} }
+
+  /* PRICING */
+  .price-card{
+    background:linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:48px;
+    display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .price-card::after{
+    content:""; position:absolute; top:-60px; right:-60px; width:220px; height:220px;
+    background:radial-gradient(circle, rgba(255,122,26,0.28), transparent 70%);
+  }
+  .price-card h3{font-family:'Space Grotesk',sans-serif; font-size:24px; margin-bottom:12px;}
+  .price-card ul{list-style:none; margin-top:18px; display:flex; flex-direction:column; gap:10px;}
+  .price-card li{font-size:14.5px; color:var(--ink-dim); display:flex; gap:9px; align-items:flex-start;}
+  .price-card li::before{content:"✓"; color:var(--lime); font-weight:700; flex-shrink:0;}
+  .price-box{
+    background:var(--bg-void); border:1px solid var(--line); border-radius:16px; padding:32px 26px;
+    text-align:center; position:relative; z-index:1;
+  }
+  .price-box .old{
+    font-family:'JetBrains Mono',monospace; color:var(--ink-dimmer); text-decoration:line-through; font-size:15px;
+  }
+  .price-box .new{
+    font-family:'Archivo Black', sans-serif; font-size:44px; color:var(--lime); margin:6px 0 4px;
+    text-shadow:0 0 30px rgba(164,232,60,0.35);
+  }
+  .price-box .fine{font-size:12.5px; color:var(--ink-dimmer); margin-bottom:22px; font-family:'JetBrains Mono',monospace;}
+  .btn-full{width:100%; justify-content:center;}
+
+  /* GUIDE CAPTURE */
+  .guide{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:48px;
+    display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center;
+  }
+  .guide-copy h3{font-family:'Space Grotesk',sans-serif; font-size:23px; margin-bottom:14px;}
+  .guide-copy p{color:var(--ink-dim); font-size:15px; line-height:1.65;}
+  .guide-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--cyan);
+    border:1px solid rgba(79,227,224,0.3); padding:5px 12px; border-radius:100px; margin-bottom:16px;
+  }
+  .guide-form{display:flex; flex-direction:column; gap:14px;}
+  .guide-form input[type=email]{
+    background:var(--bg-void); border:1px solid var(--line); border-radius:10px;
+    padding:15px 16px; color:var(--ink); font-family:'Inter',sans-serif; font-size:15px;
+    outline:none; transition:border-color 0.15s ease;
+  }
+  .guide-form input[type=email]:focus{border-color:var(--cyan);}
+  .guide-form input[type=email]::placeholder{color:var(--ink-dimmer);}
+  .checkbox-row{
+    display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--ink-dimmer); line-height:1.5;
+  }
+  .checkbox-row input{margin-top:3px; accent-color:var(--lime);}
+  .btn-secondary{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;
+    background:transparent; color:var(--ink); border:1px solid var(--cyan);
+    padding:15px 24px; border-radius:10px; cursor:pointer;
+    transition:background 0.18s ease, box-shadow 0.18s ease;
+  }
+  .btn-secondary:hover{background:rgba(79,227,224,0.1); box-shadow:0 0 24px -6px rgba(79,227,224,0.5);}
+  .form-msg{font-size:13px; color:var(--lime); font-family:'JetBrains Mono',monospace; display:none;}
+
+  footer{
+    padding:40px 0 60px; text-align:center; color:var(--ink-dimmer); font-size:13px;
+    font-family:'JetBrains Mono',monospace; position:relative; z-index:1;
+  }
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr; gap:40px; padding-top:10px;}
+    .box-stage{order:-1;}
+    .terms{grid-template-columns:1fr;}
+    .price-card{grid-template-columns:1fr;}
+    .guide{grid-template-columns:1fr;}
+  }
+  @media (max-width:520px){
+    .wrap, nav{padding-left:20px; padding-right:20px;}
+    .price-card, .guide{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-glow"></div>
+
+<nav>
+  <div class="brand">
+    <span class="dot"></span>
+    <div>
+      O MUNDO DE JIMMY
+      <small>PACOTE DE PROMPTS</small>
+    </div>
+  </div>
+  <div class="nav-tag"><span class="pip"></span> download instantâneo</div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-bottom:60px;">
+    <div>
+      <span class="eyebrow">O mundo de jimmy</span>
+      <h1 class="title">Crie desenhos<span class="line2">sobre a sua família</span></h1>
+      <p class="hero-sub">Você já viu nossos episódios. Aqui está <strong>tudo</strong> o que usamos para criá-los — cada prompt, exatamente como usamos.</p>
+      <div class="hero-cta-row">
+        <a href="#pacote" class="btn-primary">
+          Obter o Pacote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div class="price-tag"><span class="was">R$47,00</span><span class="now">R$ 29,90</span></div>
+      </div>
+    </div>
+    <div class="box-stage">
+      <div class="box-art"><img src="box-cover.png" alt="Pacote de Prompts — O Mundo de Jimmy"></div>
+    </div>
+  </section>
+
+  <!-- FORMULA -->
+  <section>
+    <div class="section-head">
+      <span class="kicker">Pacote de prompts secretos</span>
+      <h2>A fórmula por trás de dezenas de milhões de visualizações</h2>
+      <p class="section-sub">Cada prompt, exatamente como o usamos. Sem segredos guardados.</p>
+    </div>
+    <div class="terms">
+      <div class="term-card">
+        <div class="term-bar"><span></span><span></span><span></span><span class="term-label">formula.prompt</span></div>
+        <div class="term-body">
+          <span class="icon">🔑</span>
+          <h3>A fórmula</h3>
+          <p>Qualquer um pode criar o prompt de um personagem. Quase ninguém sabe o timing: para onde vai a reação, quanto tempo manter o silêncio antes da revelação. É por isso que as pessoas assistem até o final.</p>
+        </div>
+      </div>
+      <div class="term-card">
+        <div class="term-bar"><span></span><span></span><span></span><span class="term-label">episodio.prompt</span></div>
+        <div class="term-body">
+          <span class="icon">🎬</span>
+          <h3>Os prompts</h3>
+          <p>Personagens, locais, animação, trilha sonora — além de um prompt de episódio completo, cena por cena, exatamente como o executamos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section>
+    <div class="section-head" style="margin-bottom:24px;">
+      <span class="kicker">Ferramentas utilizadas</span>
+      <h2 style="font-size:22px;">O pipeline completo, do texto ao episódio</h2>
+    </div>
+    <div class="pipeline">
+      <div class="pipe-node"><div class="dot">🖌️</div>Midjourney</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node"><div class="dot">🖼️</div>GPT Image 2</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node"><div class="dot">🎞️</div>Seedance 2.0</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node"><div class="dot">🔊</div>Seed Audio 1.0</div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pacote">
+    <div class="price-card">
+      <div>
+        <span class="kicker">Pacote de prompts</span>
+        <h3>Tudo que você precisa para criar seu primeiro episódio hoje</h3>
+        <ul>
+          <li>Prompts de personagens, locais, animação e trilha sonora</li>
+          <li>Um prompt de episódio completo, cena por cena</li>
+          <li>A fórmula de timing e revelação usada em todos os episódios</li>
+          <li>Compatível com Midjourney, GPT Image 2, Seedance 2.0 e Seed Audio 1.0</li>
+        </ul>
+      </div>
+      <div class="price-box">
+        <div class="old">De: R$47,00</div>
+        <div class="new">R$ 29,90</div>
+        <div class="fine">pagamento único · download instantâneo · seu para sempre</div>
+        <a href="#" class="btn-primary btn-full">
+          Obter o Pacote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREE GUIDE -->
+  <section>
+    <div class="guide">
+      <div class="guide-copy">
+        <span class="guide-badge">✦ guia gratuito</span>
+        <h3>Nunca fez um desenho animado antes? Comece aqui.</h3>
+        <p>Uma ferramenta, uma conversa e sua família vira um desenho animado ainda hoje à noite. Ajudamos você em cada passo — grátis, direto na sua caixa de entrada.</p>
+      </div>
+      <form class="guide-form" id="guideForm">
+        <input type="email" id="guideEmail" placeholder="seu@email.com" required>
+        <label class="checkbox-row">
+          <input type="checkbox" id="guideConsent" required>
+          Concordo em receber o guia e e-mails de O Mundo de Jimmy
+        </label>
+        <button type="submit" class="btn-secondary">Envie-me o guia gratuito</button>
+        <span class="form-msg" id="guideMsg">✓ Guia enviado! Confira sua caixa de entrada.</span>
+      </form>
+    </div>
+  </section>
+
+</div>
+
+<footer>© O MUNDO DE JIMMY — pacote de prompts para desenhos animados</footer>
+
+<script>
+  document.getElementById('guideForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('guideMsg').style.display = 'block';
+    this.querySelector('button').textContent = 'Enviado ✓';
+    this.querySelector('button').disabled = true;
+  });
+</script>
+
+</body>
+</html>
