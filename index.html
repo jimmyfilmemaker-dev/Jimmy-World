@@ -409,13 +409,14 @@
         <p>Uma ferramenta, uma conversa e sua família vira um desenho animado ainda hoje à noite. Ajudamos você em cada passo — grátis, direto na sua caixa de entrada.</p>
       </div>
       <form class="guide-form" id="guideForm">
-        <input type="email" id="guideEmail" placeholder="seu@email.com" required>
+        <input type="hidden" name="access_key" value="ba82e8c3-ddb1-4cca-8b03-03b97b0f00eb">
+        <input type="email" id="guideEmail" name="email" placeholder="seu@email.com" required>
         <label class="checkbox-row">
           <input type="checkbox" id="guideConsent" required>
           Concordo em receber o guia e e-mails de O Mundo de Jimmy
         </label>
         <button type="submit" class="btn-secondary">Envie-me o guia gratuito</button>
-        <span class="form-msg" id="guideMsg">✓ Guia enviado! Confira sua caixa de entrada.</span>
+        <span class="form-msg" id="guideMsg" style="display:none;"></span>
       </form>
     </div>
   </section>
@@ -425,11 +426,44 @@
 <footer>© O MUNDO DE JIMMY — pacote de prompts para desenhos animados</footer>
 
 <script>
-  document.getElementById('guideForm').addEventListener('submit', function(e){
+  document.getElementById('guideForm').addEventListener('submit', async function(e){
     e.preventDefault();
-    document.getElementById('guideMsg').style.display = 'block';
-    this.querySelector('button').textContent = 'Enviado ✓';
-    this.querySelector('button').disabled = true;
+    
+    const form = this;
+    const button = form.querySelector('button');
+    const msg = document.getElementById('guideMsg');
+
+    button.textContent = 'Enviando...';
+    button.disabled = true;
+
+    const formData = new FormData(form);
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: json
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        msg.style.display = 'block';
+        msg.innerHTML = '✓ <strong>Cadastrado com sucesso!</strong><br><a href="Guia_Familia_Gratis.pdf" target="_blank" style="color:var(--cyan); text-decoration:underline; font-weight:600;">👉 Clique aqui para baixar seu Guia_Familia_Gratis.pdf</a>';
+        button.textContent = 'Pronto ✓';
+      } else {
+        throw new Error(data.message || 'Erro ao enviar');
+      }
+    } catch (error) {
+      alert('Ocorreu um erro ao enviar. Certifique-se de testar com o site hospedado ou em um servidor local.');
+      button.textContent = 'Envie-me o guia gratuito';
+      button.disabled = false;
+    }
   });
 </script>
 
